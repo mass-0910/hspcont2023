@@ -1,0 +1,12 @@
+#ifndef CONST_HSP
+#define CONST_HSP
+
+// 真偽値マクロ
+#define global true 1
+#define global false 0
+
+// シーン指定enum
+#enum SCENE_TITLE = 0
+#enum SCENE_GAME
+
+#endif // CONST_HSP

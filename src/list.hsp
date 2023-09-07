@@ -1,0 +1,65 @@
+#ifndef LIST_HSP
+#define LIST_HSP
+
+#module List buf, last
+
+#modinit int type
+    dimtype buf, type, 32
+    last = 0
+    return
+
+#modfunc appendElement var value, local tmp_array, local realloc_length
+    // バッファサイズが足りないときは2倍の長さを再確保
+    if last >= length(buf) {
+        realloc_length = 2 * length(buf)
+        dimtype tmp_array, vartype(buf), realloc_length
+        foreach buf
+            tmp_array(cnt) = buf(cnt)
+        loop
+        dimtype buf, vartype(buf), realloc_length
+        foreach tmp_array
+            buf(cnt) = tmp_array(cnt)
+        loop
+    }
+    // 要素を追加し、末尾を後ろに移動
+    buf(last) = value
+    last++
+    return
+
+#modfunc removeElement int index
+    repeat last - index - 1
+        buf(index + cnt) = buf(index + cnt + 1)
+    loop
+    last--
+    assert last >= 0
+    return
+
+#modcfunc getElement int index
+    assert index >= 0 && index < last
+    return buf(index)
+
+#modfunc setElement int index, var value
+    assert index >= 0 && index < last
+    buf(index) = value
+    return
+
+#modcfunc findElement var value, local find_index
+    find_index = -1
+    repeat getLength(thismod)
+        if buf(cnt) == value {
+            find_index = cnt
+            break
+        }
+    loop
+    return find_index
+
+#modcfunc getLength
+    return last
+
+#modfunc clearList
+    last = 0
+    return
+
+#global
+
+#endif // LIST_HSP

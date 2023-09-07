@@ -1,0 +1,19 @@
+#ifndef TITLE_HSP
+#define TITLE_HSP
+
+*titleInit
+    return
+
+*titleDraw
+    mes "titleScene"
+    return
+
+*titleUpdate
+    requestSceneSwitch SCENE_GAME
+    return
+
+*titleDestroy
+    mes "titleDestroy"
+    return
+
+#endif // TITLE_HSP

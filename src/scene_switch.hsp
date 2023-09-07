@@ -1,0 +1,26 @@
+#ifndef SCENE_SWITCH_HSP
+#define SCENE_SWITCH_HSP
+
+#module SceneSwitch
+
+#deffunc initSceneSwitch
+    switch_requested = false
+    next_scene_holder = 0
+
+#deffunc requestSceneSwitch int next_scene
+    next_scene_holder = next_scene
+    switch_requested = true
+
+#defcfunc isSwitchRequested
+    return switch_requested
+
+#deffunc switchScene var scene_id, array scene_init, array scene_destroy
+    gosub scene_destroy(scene_id)
+    scene_id = next_scene_holder
+    gosub scene_init(scene_id)
+    switch_requested = false
+    return
+
+#global
+
+#endif // SCENE_SWITCH_HSP

@@ -1,0 +1,47 @@
+#include "hspdef.as"
+
+goto *init
+
+#include "a2d.hsp"
+
+#include "buffer_util.hsp"
+#include "const.hsp"
+#include "game.hsp"
+#include "scene_switch.hsp"
+#include "title.hsp"
+
+*init
+    // ウィンドウ設定
+    screen 0, 640, 480
+    title "stealth"
+
+    // シーン管理システム初期化
+    scene_id = SCENE_TITLE
+    sceneroutine_init = *titleInit, *gameInit
+    sceneroutine_draw = *titleDraw, *gameDraw
+    sceneroutine_update = *titleUpdate, *gameUpdate
+    sceneroutine_destroy = *titleDestroy, *gameDestroy
+    initSceneSwitch
+
+    // 初期シーン初期化
+    gosub sceneroutine_init(scene_id)
+
+    // バッファ管理モジュール初期化
+    bufferutilInit
+
+*main
+    // 描画ルーチン
+    redraw 0
+    gosub sceneroutine_draw(scene_id)
+    redraw 1
+
+    // 更新ルーチン
+    gosub sceneroutine_update(scene_id)
+
+    // シーン遷移をリクエストされたときはシーンをスイッチする
+    if isSwitchRequested() {
+        switchScene scene_id, sceneroutine_init, sceneroutine_destroy
+    }
+
+    await 15
+    goto *main

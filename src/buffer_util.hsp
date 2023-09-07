@@ -1,0 +1,48 @@
+#ifndef BUFFER_UTIL_HSP
+#define BUFFER_UTIL_HSP
+
+#include "list.hsp"
+
+#module
+
+#deffunc bufferutilInit local _t
+    newmod id_list, List, vartype("int")
+    // バッファID0はメインウィンドウのため、すでに登録済みとして扱う
+    _t = 0
+    appendElement id_list, _t
+    return
+
+#deffunc registerBufferId int id
+    _id = id
+    if findElement(id_list, _id) >= 0 {
+        appendElement id_list, _id
+    } else {
+        dialog "ID:" + _id + "はすでに登録されてあります", 1
+    }
+    return
+
+#defcfunc createNewBufferId local max, local newId
+    max = 0
+    repeat getLength(id_list)
+        if max < getElement(id_list, cnt) {
+            max = getElement(id_list, cnt)
+        }
+    loop
+    newId = max + 1
+    appendElement id_list, newId
+    return newId
+
+#deffunc deleteAllBuffer
+    clearList id_list
+    return
+
+#defcfunc createBuffer int sizex, int sizey, local buf_id, local origin_sel
+    origin_sel = ginfo_sel
+    buf_id = createNewBufferId()
+    buffer buf_id, sizex, sizey
+    gsel origin_sel
+    return buf_id
+
+#global
+
+#endif // BUFFER_UTIL_HSP

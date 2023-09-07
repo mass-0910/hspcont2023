@@ -1,0 +1,9 @@
+#runtime "hsp3"
+
+#include "hspdef.as"
+
+#include "../../src/list.hsp"
+
+*test_list
+    newmod l, List, vartype("int")
+    return

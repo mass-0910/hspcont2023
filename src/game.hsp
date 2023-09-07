@@ -1,0 +1,53 @@
+#ifndef GAME_HSP
+#define GAME_HSP
+
+#module
+
+#deffunc _gameInit
+    // 影用Artle2Dバッファ
+    alCreateImage 0, ginfo_sx, ginfo_sy
+    if stat == -1 {
+        dialog "artlet2Dバッファの初期化に失敗しました", 1
+    }
+    // 上部（影影響なし）用バッファ
+    foreground_buf = createBuffer(ginfo_sx, ginfo_sy)
+    // 下地（地面）用バッファ
+    background_buf = createBuffer(ginfo_sx, ginfo_sy)
+    return
+
+#deffunc _gameDraw
+    gmode gmode_rgb0, ginfo_sx, ginfo_sy
+    gcopy background_buf
+    // Artlet2Dバッファの白(255,255,255)を透明色に登録
+    alCopyModeColorKey 0xffffff, 0xffffff
+    alCopyImageToScreen 0, 0
+    gcopy foreground_buf
+    return
+
+#deffunc _gameUpdate
+    return
+
+#deffunc _gameDestroy
+    alDeleteAll
+    deleteAllBuffer
+    return
+
+#global
+
+*gameInit
+    _gameInit
+    return
+
+*gameDraw
+    _gameDraw
+    return
+
+*gameUpdate
+    _gameUpdate
+    return
+
+*gameDestroy
+    _gameDestroy
+    return
+
+#endif // GAME_HSP
